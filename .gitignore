@@ -1,0 +1,55 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.pyc
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Binary files
+.db
+.db3
+.sqlite
+
+# Build system
+build
+bin
+lib
+doxydocs
+temp
+debug
+external
+
+# Config & data files
+*.json
+config/*
+!config/*.json.empty
+data/*
+!data/catalog/
+data/catalog/*
+!data/catalog/test_catalog.txt
+
+# Project files
+*.sublime*
