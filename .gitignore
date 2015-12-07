@@ -45,7 +45,7 @@ external
 # Config & data files
 *.json
 config/*
-!config/*.json.empty
+!config/*.json.example
 data/*
 !data/catalog/
 data/catalog/*
