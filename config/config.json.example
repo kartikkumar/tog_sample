@@ -1,7 +1,7 @@
 {
-    "initial_keplerian_state" : [149.6e6, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "initial_keplerian_state" : [149.6e6, 0.2, 0.0, 0.0, 0.0, 0.0],
     "gravitational_parameter" : 1.32712440018e11,
     "start_epoch"             : 0.0,
     "step_size"               : 86400.0,
-    "number_of_steps"         : 100
+    "number_of_steps"         : 365
 }
