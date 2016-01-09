@@ -76,14 +76,15 @@ int main( const int numberOfInputs, const char* inputArguments[ ] )
     config.Parse( jsonDocumentBuffer.str( ).c_str( ) );
     rapidjson::Value::MemberIterator configIterator;
 
-    // Extract initial Cartesian state vector provided by user [km, km/s].
-    configIterator = config.FindMember( "initial_cartesian_state" );
-    std::vector< double > initialCartesianState( 6 );
+    // Extract initial Keplerian state vector provided by user
+    // [a=[km], e=[-], i=[rad], omega=[rad], Omega=[rad], theta=[rad]].
+    configIterator = config.FindMember( "initial_keplerian_state" );
+    std::vector< double > initialKeplerianState( 6 );
     for ( unsigned int i = 0; i < 6; i++ )
     {
-        initialCartesianState.at( i ) = configIterator->value[ i ].GetDouble( );
+        initialKeplerianState.at( i ) = configIterator->value[ i ].GetDouble( );
     }
-    std::cout << "Initial Cartesian state [km, km/s]  :  " << initialCartesianState << std::endl;
+    std::cout << "Initial Keplerian state [km, km/s]  :  " << initialKeplerianState << std::endl;
 
     // Extract gravitational parameter [km^3 s^-2].
     configIterator = config.FindMember( "gravitational_parameter" );
@@ -118,28 +119,37 @@ int main( const int numberOfInputs, const char* inputArguments[ ] )
     // Set epoch [s].
     double epoch = startEpoch;
 
-    // Set position [km].
+    // Convert initial Keplerian state to Cartesian position and velocity [km; km/s].
     std::vector< double > position( 3 );
-    for ( unsigned int i = 0; i < 3; i++ )
-    {
-        position.at ( i ) = initialCartesianState.at( i );
-    }
-
-    // Set velocity [km/s].
     std::vector< double > velocity( 3 );
-    for ( unsigned int i = 0; i < 3; i++ )
-    {
-        velocity.at ( i ) = initialCartesianState.at( i + 3 );
-    }
+    kep_toolbox::par2ic( initialKeplerianState, gravitationalParameter, position, velocity );
 
-    std::cout << "t           position [km]                        velocity [km/s]" << std::endl;
-    std::cout << epoch << "           " << position << "           " << velocity << std::endl;
+    // std::cout << "t           position [km]                        velocity [km/s]" << std::endl;
+    std::cout << epoch << ",";
+    for ( unsigned int j = 0; j < 3; j++ )
+    {
+        std::cout << position.at( j ) << ",";
+    }
+    for ( unsigned int k = 0; k < 2; k++ )
+    {
+        std::cout << velocity.at( k ) << ",";
+    }
+    std::cout << velocity.at( 2 ) << std::endl;
 
     for ( unsigned int i = 0; i < numberOfSteps; i++ )
     {
         kep_toolbox::propagate_lagrangian( position, velocity, stepSize, gravitationalParameter );
         epoch = epoch + stepSize;
-        std::cout << epoch << "           " << position << "           " << velocity << std::endl;
+        std::cout << epoch << ",";
+        for ( unsigned int j = 0; j < 3; j++ )
+        {
+            std::cout << position.at( j ) << ",";
+        }
+        for ( unsigned int k = 0; k < 2; k++ )
+        {
+            std::cout << velocity.at( k ) << ",";
+        }
+        std::cout << velocity.at( 2 ) << std::endl;
     }
 
     ///////////////////////////////////////////////////////////////////////////
