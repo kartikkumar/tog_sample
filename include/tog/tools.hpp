@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Kartik Kumar (me@kartikkumar.com)
+ * Copyright (c) 2014-2016 Kartik Kumar (me@kartikkumar.com)
  * Distributed under the MIT License.
  * See accompanying file LICENSE.md or copy at http://opensource.org/licenses/MIT
  */
@@ -17,7 +17,7 @@
 
 #include <rapidjson/document.h>
 
-#include "TOG/typedefs.hpp"
+#include "tog/typedefs.hpp"
 
 namespace tog
 {
@@ -49,7 +49,7 @@ static inline std::string getRootPath( )
 {
     std::string filePath( __FILE__ );
     return filePath.substr(
-      0, filePath.length( ) - std::string( "include/TOG/tools.hpp" ).length( ) );
+      0, filePath.length( ) - std::string( "include/tog/tools.hpp" ).length( ) );
 }
 
 //! Print value to stream.

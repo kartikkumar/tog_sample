@@ -1,11 +1,11 @@
-# Copyright (c) 2014-2015 Kartik Kumar (me@kartikkumar.com)
+# Copyright (c) 2014-2016 Kartik Kumar (me@kartikkumar.com)
 # Distributed under the MIT License.
 # See accompanying file LICENSE.md or copy at http://opensource.org/licenses/MIT
 
 cmake_minimum_required(VERSION 2.6)
 
 # Change this section to correspond with your project info.
-project(TOG C CXX)
+project(tog C CXX)
 set(PROJECT_SUMMARY                            "Theory of Games -- sample application")
 set(${CMAKE_PROJECT_NAME}_VENDOR_NAME          "Kartik Kumar")
 set(${CMAKE_PROJECT_NAME}_VENDOR_CONTACT       "me@kartikkumar.com")
@@ -30,7 +30,7 @@ if(NOT DOCS_PATH)
   set(DOCS_PATH                                "${PROJECT_PATH}/docs")
 endif(NOT DOCS_PATH)
 set(LIB_PATH                                   "${PROJECT_BINARY_DIR}/lib")
-set(LIB_NAME                                   "tof_methods")
+set(LIB_NAME                                   "tog_methods")
 set(BIN_PATH                                   "${PROJECT_BINARY_DIR}/bin")
 set(MAIN_NAME                                  "tog")
 set(TEST_PATH                                  "${PROJECT_BINARY_DIR}/test")
@@ -53,7 +53,7 @@ set(MAIN_SRC
 )
 
 set(TEST_SRC
-  "${TEST_SRC_PATH}/testTOG.cpp"
+  "${TEST_SRC_PATH}/testTog.cpp"
 )
 
 # Set CMake build-type. If it not supplied by the user, the default built type is "Release".
@@ -107,9 +107,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${LIB_PATH})
 #if(NOT RAPIDJSON_FOUND)
 #  add_dependencies(${LIB_NAME} rapidjson-lib)
 #endif(NOT RAPIDJSON_FOUND)
-#f(NOT KEPLERIANTOOLBOX_FOUND)
-#  add_dependencies(${LIB_NAME} keplerian_toolbox-lib)
-#endif(NOT KEPLERIANTOOLBOX_FOUND)
+#f(NOT PYKEP_FOUND)
+#  add_dependencies(${LIB_NAME} pykep-lib)
+#endif(NOT PYKEP_FOUND)
 
 if(BUILD_MAIN)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_PATH})
@@ -147,8 +147,8 @@ if(BUILD_TESTS)
 
   add_executable(${TEST_NAME} ${TEST_SRC})
   target_link_libraries(${TEST_NAME}
-    ${LIB_NAME}
-    ${KEPLERIANTOOLBOX_LIBRARY}
+    # ${LIB_NAME}
+    ${PYKEP_LIBRARY}
     )
   add_test(NAME ${TEST_NAME} COMMAND "${TEST_PATH}/${TEST_NAME}")
 

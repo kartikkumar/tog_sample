@@ -1,9 +1,16 @@
-# Copyright (c) 2014-2015 Kartik Kumar (me@kartikkumar.com)
+# Copyright (c) 2014-2016 Kartik Kumar (me@kartikkumar.com)
 # Distributed under the MIT License.
 # See accompanying file LICENSE.md or copy at http://opensource.org/licenses/MIT
 
 # Include script to build external library with CMake.
 include(ExternalProject)
+
+# -------------------------------
+
+# RapidJSON: https://github.com/miloyip/rapidjson
+# PyKEP:     https://github.com/esa/pykep
+# Catch:     https://github.com/philsquared/Catch
+# Eigen:     http://eigen.tuxfamily.org
 
 if(NOT BUILD_DEPENDENCIES)
   find_package(rapidjson)
@@ -40,13 +47,13 @@ endif(NOT APPLE)
 # -------------------------------
 
 if(NOT BUILD_DEPENDENCIES)
-  find_package(KeplerianToolbox)
+  find_package(PyKEP)
 endif(NOT BUILD_DEPENDENCIES)
 
-if(NOT KEPLERIANTOOLBOX_FOUND)
-  message(STATUS "KeplerianToolbox will be downloaded when ${CMAKE_PROJECT_NAME} is built")
-  ExternalProject_Add(keplerian_toolbox-lib
-    PREFIX ${EXTERNAL_PATH}/KeplerianToolbox
+if(NOT PYKEP_FOUND)
+  message(STATUS "PyKEP will be downloaded when ${CMAKE_PROJECT_NAME} is built")
+  ExternalProject_Add(pykep-lib
+    PREFIX ${EXTERNAL_PATH}/PyKEP
     #--Download step--------------
     URL https://github.com/esa/pykep/archive/master.zip
     TIMEOUT 120
@@ -59,20 +66,20 @@ if(NOT KEPLERIANTOOLBOX_FOUND)
     #--Output logging-------------
     LOG_DOWNLOAD ON
   )
-  ExternalProject_Get_Property(keplerian_toolbox-lib source_dir)
-  set(KEPLERIANTOOLBOX_INCLUDE_DIRS ${source_dir}/src
-    CACHE INTERNAL "Path to include folder for KeplerianToolbox")
-  set(KEPLERIANTOOLBOX_LIBRARY_DIR ${source_dir}/src
-    CACHE INTERNAL "Path to include folder for KeplerianToolbox")
-  set(KEPLERIANTOOLBOX_LIBRARY "keplerian_toolbox_static")
-endif(NOT KEPLERIANTOOLBOX_FOUND)
+  ExternalProject_Get_Property(pykep-lib source_dir)
+  set(PYKEP_INCLUDE_DIRS ${source_dir}/src
+    CACHE INTERNAL "Path to include folder for PyKEP")
+  set(PYKEP_LIBRARY_DIR ${source_dir}/src
+    CACHE INTERNAL "Path to include folder for PyKEP")
+  set(PYKEP_LIBRARY "keplerian_toolbox_static")
+endif(NOT PYKEP_FOUND)
 
 if(NOT APPLE)
-  include_directories(SYSTEM AFTER "${KEPLERIANTOOLBOX_INCLUDE_DIRS}")
+  include_directories(SYSTEM AFTER "${PYKEP_INCLUDE_DIRS}")
 else(APPLE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isystem \"${KEPLERIANTOOLBOX_INCLUDE_DIRS}\"")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isystem \"${PYKEP_INCLUDE_DIRS}\"")
 endif(NOT APPLE)
-link_directories(${KEPLERIANTOOLBOX_LIBRARY_DIR})
+link_directories(${PYKEP_LIBRARY_DIR})
 
 # -------------------------------
 
@@ -83,10 +90,10 @@ if(BUILD_TESTS)
 
   if(NOT CATCH_FOUND)
     message(STATUS "Catch will be downloaded when ${CMAKE_PROJECT_NAME} is built")
-    ExternalProject_Add(catch
+    ExternalProject_Add(catch-lib
       PREFIX ${EXTERNAL_PATH}/Catch
       #--Download step--------------
-      URL https://github.com/kartikkumar/Catch/archive/master.zip
+      URL https://github.com/philsquared/Catch/archive/master.zip
       TIMEOUT 30
       #--Update/Patch step----------
       UPDATE_COMMAND ""
@@ -100,7 +107,7 @@ if(BUILD_TESTS)
       #--Output logging-------------
       LOG_DOWNLOAD ON
     )
-    ExternalProject_Get_Property(catch source_dir)
+    ExternalProject_Get_Property(catch-lib source_dir)
     set(CATCH_INCLUDE_DIRS ${source_dir}/include CACHE INTERNAL "Path to include folder for Catch")
   endif(NOT CATCH_FOUND)
 
@@ -120,8 +127,8 @@ if(BUILD_TESTS)
       ExternalProject_Add(eigen-lib
         PREFIX ${EXTERNAL_PATH}/Eigen
         #--Download step--------------
-        URL http://bitbucket.org/eigen/eigen/get/3.2.2.tar.gz
-        TIMEOUT 30
+        URL https://bitbucket.org/eigen/eigen/get/3.2.9.zip
+        TIMEOUT 60
         #--Update/Patch step----------
         UPDATE_COMMAND ""
         PATCH_COMMAND ""

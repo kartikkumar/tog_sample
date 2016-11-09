@@ -1,7 +1,7 @@
 Theory of Games -- Sample Application
 ===================
 
-[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+\cond [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT) \endcond
 
 Requirements
 ------
@@ -49,6 +49,12 @@ You can pass the following, general command-line options when running CMake:
 The following command is conditional and can only be set if `BUILD_TESTS = ON`:
 
   - `-DBUILD_COVERAGE_ANALYSIS[=ON|OFF (default)]`: build code coverage using [Gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov.html) and [LCOV](http://ltp.sourceforge.net/coverage/lcov.php) (both must be installed; requires [GCC](https://gcc.gnu.org/) compiler; execute coverage analysis from build-directory using `make coverage`)
+
+Pass these options either directly to the `cmake ..` command, e.g., to build the tests:
+
+    cmake -DBUILD_TESTS=on ..
+
+N.B.: Toggling options to build tests using `ccmake` does not work correctly, as the necessarily libraries are not download automagically!
 
 Contributing
 ------------
