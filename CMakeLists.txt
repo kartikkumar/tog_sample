@@ -45,8 +45,9 @@ include(CMakeDependentOption)
 CMAKE_DEPENDENT_OPTION(BUILD_COVERAGE_ANALYSIS "Build code coverage analysis"   OFF
                                                "BUILD_TESTS"                    OFF)
 
-#set(SRC
-#)
+set(SRC
+  "${SRC_PATH}/dummy.cpp"
+)
 
 set(MAIN_SRC
   "${SRC_PATH}/tog.cpp"
@@ -97,28 +98,22 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-include_directories(AFTER "${INCLUDE_PATH}")
-
 include(Dependencies.cmake)
+include_directories(AFTER "${INCLUDE_PATH}")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_PATH})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${LIB_PATH})
-#add_library(${LIB_NAME} ${SRC})
-#if(NOT RAPIDJSON_FOUND)
-#  add_dependencies(${LIB_NAME} rapidjson-lib)
-#endif(NOT RAPIDJSON_FOUND)
-#f(NOT PYKEP_FOUND)
-#  add_dependencies(${LIB_NAME} pykep-lib)
-#endif(NOT PYKEP_FOUND)
+add_library(${LIB_NAME} ${SRC})
+if(NOT PYKEP_FOUND)
+ add_dependencies(${LIB_NAME} pykep-lib)
+endif(NOT PYKEP_FOUND)
 
 if(BUILD_MAIN)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_PATH})
   add_executable(${MAIN_NAME} ${MAIN_SRC})
   target_link_libraries(${MAIN_NAME}
-#    ${LIB_NAME}
-    ${KEPLERIANTOOLBOX_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS}
+    ${LIB_NAME}
+    ${PYKEP_LIBRARY}
   )
 endif(BUILD_MAIN)
 
@@ -147,7 +142,7 @@ if(BUILD_TESTS)
 
   add_executable(${TEST_NAME} ${TEST_SRC})
   target_link_libraries(${TEST_NAME}
-    # ${LIB_NAME}
+    ${LIB_NAME}
     ${PYKEP_LIBRARY}
     )
   add_test(NAME ${TEST_NAME} COMMAND "${TEST_PATH}/${TEST_NAME}")
